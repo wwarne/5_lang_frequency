@@ -28,7 +28,7 @@ def count_words(data):
 
 
 def get_most_frequent_words(words_dict):
-    return sorted(words_dict.items(), reverse=True, key=lambda one_iten: words_dict[one_iten[0]])[:10]
+    return sorted(words_dict.items(), reverse=True, key=lambda one_item: words_dict[one_item[0]])[:10]
 
 
 def pretty_print(words):
