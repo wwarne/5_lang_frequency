@@ -1,6 +1,14 @@
 # Frequency Analysis of Words
 
-This script takes a file with text, and prints out top 10 most frequently used words in this text.
+This script takes a file with text, and prints out top of the most frequently used words in this text.
+
+# Usage
+
+```bash
+$ python lang_frequency.py filepath [number]
+    filepath - Path to a file with some text.
+    number - How many top frequent words to print out. Default is 10
+```
 
 # Usage example
 
@@ -8,9 +16,7 @@ This script takes a file with text, and prints out top 10 most frequently used w
 
 $ python lang_frequency.py FAHRENHEIT_451.txt
 >
-----------------
 | Word | Count |
-----------------
 | the | 2911 |
 | and | 1648 |
 |  a  | 1078 |
@@ -21,8 +27,6 @@ $ python lang_frequency.py FAHRENHEIT_451.txt
 | it  | 609 |
 | you | 564 |
 | was | 510 |
-----------------
-
 ```
 
 # Project Goals
