@@ -1,57 +1,49 @@
+import argparse
+import re
+import os
 import sys
-
-PUNCTUATION = '!?,.;:()[]»«„“”‘’`"–—'
-
-
-def load_data(filepath):
-    try:
-        with open(filepath, mode='r', encoding='utf-8') as data_file:
-            for line in data_file:
-                yield line
-    except OSError:
-        yield ''
+from collections import Counter
 
 
-def count_words(data):
-    result = {}
-    for line in data:
-        for punctuation_mark in PUNCTUATION:
-            if punctuation_mark in line:
-                line = line.replace(punctuation_mark, ' ')
-        for word in line.split():
-            word = word.strip().lower()
-            if word not in result:
-                result[word] = 1
-            else:
-                result[word] += 1
+FIND_EVERY_WORD = re.compile(r'\w+', re.UNICODE)
+
+
+def fetch_lines_from_file(filepath):
+    yield from open(filepath, mode='r', encoding='utf-8')
+
+
+def split_lines_to_words(lines):
+    for line in lines:
+        for match in FIND_EVERY_WORD.finditer(line):
+            yield match.group(0).lower()
+
+
+def count_words_from_file(filepath):
+    result = Counter()
+    lines = fetch_lines_from_file(filepath)
+    words = split_lines_to_words(lines)
+    result.update(words)
     return result
 
 
-def get_most_frequent_words(words_dict):
-    return sorted(words_dict.items(), reverse=True, key=lambda one_item: words_dict[one_item[0]])[:10]
+def print_words(counted_words):
+    print('| {:<14} | {:<11} |'.format('WORD', 'COUNT'))
+    for word, count in counted_words:
+        print('| {:<14} | {:<11} |'.format(word, count))
 
 
-def pretty_print(words):
-    max_word_len = len(max([word[0] for word in words], key=len))
-    row_template = '| {:^%i} | {:^%i} |' % (max_word_len, max_word_len)
-    header = row_template.format('Word', 'Count')
-
-    print('-' * len(header))
-    print(header)
-    print('-' * len(header))
-
-    for one_word in words:
-        print(row_template.format(*one_word))
-
-    print('-' * len(header))
-
+def create_parser():
+    result = argparse.ArgumentParser()
+    result.add_argument('filepath', help='Path to a file')
+    result.add_argument('number', default=10, type=int, help='How many words do you want', nargs='?')
+    return result
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        sys.exit('Script usage: python lang_frequency.py <path to the file>')
-    text_lines = load_data(sys.argv[1])
-    words_stat = count_words(text_lines)
-    if not words_stat:
-        sys.exit('File `{}` is empty or unavailable.'.format(sys.argv[1]))
-    top_words = get_most_frequent_words(words_stat)
-    pretty_print(top_words)
+    parser = create_parser()
+    namespace = parser.parse_args()
+    if not os.path.isfile(namespace.filepath):
+        sys.exit('There is no file called {}'.format(namespace.filepath))
+
+    all_words_counted = count_words_from_file(namespace.filepath)
+    top_words = all_words_counted.most_common(namespace.number)
+    print_words(top_words)
