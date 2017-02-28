@@ -35,7 +35,7 @@ def print_words(counted_words):
 def create_parser():
     result = argparse.ArgumentParser()
     result.add_argument('filepath', help='Path to a file')
-    result.add_argument('number', default=10, type=int, help='How many words do you want', nargs='?')
+    result.add_argument('number', default=10, type=int, help='How many words to print (default is 10)', nargs='?')
     return result
 
 if __name__ == '__main__':
