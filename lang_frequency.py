@@ -4,7 +4,6 @@ import os
 import sys
 from collections import Counter
 
-
 FIND_EVERY_WORD = re.compile(r'\w+', re.UNICODE)
 
 
@@ -37,6 +36,7 @@ def create_parser():
     result.add_argument('filepath', help='Path to a file')
     result.add_argument('number', default=10, type=int, help='How many words to print (default is 10)', nargs='?')
     return result
+
 
 if __name__ == '__main__':
     parser = create_parser()
