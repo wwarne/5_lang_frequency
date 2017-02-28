@@ -4,16 +4,15 @@ import os
 import sys
 from collections import Counter
 
-FIND_EVERY_WORD = re.compile(r'\w+', re.UNICODE)
-
 
 def fetch_lines_from_file(filepath):
     yield from open(filepath, mode='r', encoding='utf-8')
 
 
 def split_lines_to_words(lines):
+    find_every_word = re.compile(r'\w+', re.UNICODE)
     for line in lines:
-        for match in FIND_EVERY_WORD.finditer(line):
+        for match in find_every_word.finditer(line):
             yield match.group(0).lower()
 
 
